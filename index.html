@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Delivery - Precise Location</title>
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2B48C;
+            --accent-color: #A0522D;
+            --text-color: #3E2723;
+            --light-color: #F5F5DC;
+            --highlight-color: #CD853F;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            background-image: url('https://www.transparenttextures.com/patterns/old-map.png');
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        h1 {
+            margin: 0;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .marquee-container {
+            background: var(--secondary-color);
+            border-top: 2px dashed var(--accent-color);
+            border-bottom: 2px dashed var(--accent-color);
+            padding: 8px 0;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .marquee {
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            font-style: italic;
+            color: var(--primary-color);
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .customer-info {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            margin: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, button, textarea, select {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .location-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .location-option-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .location-option-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .location-option-btn:hover {
+            background-color: var(--highlight-color);
+            color: white;
+        }
+        
+        .location-method {
+            display: none;
+        }
+        
+        .location-method.active {
+            display: block;
+        }
+        
+        #mapBtn {
+            background-color: var(--highlight-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        #mapBtn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        #manualLocationBtn {
+            background-color: var(--highlight-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        #manualLocationBtn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .location-instructions {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            margin-top: 5px;
+        }
+        
+        .location-confirmation {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(139, 195, 74, 0.2);
+            border: 1px solid #8BC34A;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .grocery-section {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            margin: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        #itemInput {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px 0 0 4px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #addBtn {
+            background-color: var(--accent-color);
+            border-radius: 0 4px 4px 0;
+        }
+        
+        #addBtn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        button.deliver {
+            background-color: var(--primary-color);
+            width: 100%;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        button.deliver:hover {
+            background-color: #5D2906;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            padding: 12px;
+            border-bottom: 1px dashed var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .delete-btn {
+            color: #8B0000;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 5px;
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .location-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vintage Grocery Delivery</h1>
+    </header>
+
+    <div class="marquee-container">
+        <div class="marquee">
+            ✦ Pin your exact location on map for most accurate delivery ✦ Free delivery on orders above ₹500 ✦
+        </div>
+    </div>
+
+    <div class="customer-info">
+        <h2>Your Information</h2>
+        <div class="form-group">
+            <label for="customerName">Full Name</label>
+            <input type="text" id="customerName" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+            <label for="customerPhone">Phone Number</label>
+            <input type="tel" id="customerPhone" placeholder="9876543210" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Delivery Location Method</label>
+            <div class="location-options">
+                <div class="location-option-btn active" data-method="manual">Manual Address</div>
+                <div class="location-option-btn" data-method="map">Pin on Map</div>
+            </div>
+            
+            <!-- Manual Address Method -->
+            <div class="location-method active" id="manualMethod">
+                <label for="deliveryAddress">Full Delivery Address</label>
+                <textarea id="deliveryAddress" placeholder="House number, street, landmark, area, city, PIN code" required></textarea>
+                <div class="location-instructions">
+                    Please provide complete address details including landmarks
+                </div>
+                <button id="manualLocationBtn">Confirm Address</button>
+            </div>
+            
+            <!-- Map Pin Method -->
+            <div class="location-method" id="mapMethod">
+                <label for="mapAddress">Approximate Address</label>
+                <textarea id="mapAddress" placeholder="Enter approximate address to help locate on map"></textarea>
+                <div class="location-instructions">
+                    For most accurate delivery, please pin your exact location
+                </div>
+                <button id="mapBtn">Open Google Maps to Pin Location</button>
+                <input type="hidden" id="locationCoords">
+            </div>
+            
+            <div class="location-confirmation" id="locationConfirmation">
+                <strong>Location confirmed!</strong>
+                <div id="confirmedAddress"></div>
+                <div id="confirmedCoords" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grocery-section">
+        <h2>Your Grocery List</h2>
+        <div class="input-container">
+            <input type="text" id="itemInput" placeholder="e.g., Hide & Seek biscuit small, Head & Shoulders shampoo 5 packets">
+            <button id="addBtn">Add</button>
+        </div>
+        <ul id="groceryList"></ul>
+        <button id="deliverBtn" class="deliver">Request Delivery</button>
+    </div>
+
+    <script>
+        // DOM elements
+        const customerName = document.getElementById('customerName');
+        const customerPhone = document.getElementById('customerPhone');
+        const deliveryAddress = document.getElementById('deliveryAddress');
+        const mapAddress = document.getElementById('mapAddress');
+        const locationOptions = document.querySelectorAll('.location-option-btn');
+        const manualMethod = document.getElementById('manualMethod');
+        const mapMethod = document.getElementById('mapMethod');
+        const mapBtn = document.getElementById('mapBtn');
+        const manualLocationBtn = document.getElementById('manualLocationBtn');
+        const locationConfirmation = document.getElementById('locationConfirmation');
+        const confirmedAddress = document.getElementById('confirmedAddress');
+        const confirmedCoords = document.getElementById('confirmedCoords');
+        const locationCoords = document.getElementById('locationCoords');
+        const itemInput = document.getElementById('itemInput');
+        const addBtn = document.getElementById('addBtn');
+        const groceryList = document.getElementById('groceryList');
+        const deliverBtn = document.getElementById('deliverBtn');
+        
+        // Grocery items array
+        let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
+        let customerData = JSON.parse(localStorage.getItem('customerData')) || {};
+        let locationMethod = 'manual'; // Default to manual address
+        
+        // Initialize form with saved data
+        if (customerData.name) customerName.value = customerData.name;
+        if (customerData.phone) customerPhone.value = customerData.phone;
+        if (customerData.address) deliveryAddress.value = customerData.address;
+        if (customerData.locationMethod) {
+            setLocationMethod(customerData.locationMethod);
+            if (customerData.locationMethod === 'map' && customerData.mapAddress) {
+                mapAddress.value = customerData.mapAddress;
+            }
+        }
+        if (customerData.locationCoords) {
+            locationCoords.value = customerData.locationCoords;
+            showLocationConfirmation();
+        }
+        
+        // Set location method
+        function setLocationMethod(method) {
+            locationMethod = method;
+            
+            // Update UI
+            locationOptions.forEach(btn => {
+                if (btn.dataset.method === method) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            manualMethod.classList.toggle('active', method === 'manual');
+            mapMethod.classList.toggle('active', method === 'map');
+        }
+        
+        // Location option buttons
+        locationOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLocationMethod(btn.dataset.method);
+                saveCustomerData();
+            });
+        });
+        
+        // Render grocery list
+        function renderList() {
+            groceryList.innerHTML = '';
+            if (items.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'Your grocery list is empty. Add items above.';
+                li.style.color = 'var(--accent-color)';
+                li.style.textAlign = 'center';
+                li.style.fontStyle = 'italic';
+                groceryList.appendChild(li);
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${item}</span>
+                    <span class="delete-btn" data-index="${index}">✕</span>
+                `;
+                groceryList.appendChild(li);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    items.splice(e.target.dataset.index, 1);
+                    localStorage.setItem('groceryItems', JSON.stringify(items));
+                    renderList();
+                });
+            });
+        }
+        
+        // Add item to list
+        addBtn.addEventListener('click', () => {
+            const item = itemInput.value.trim();
+            if (item) {
+                items.push(item);
+                localStorage.setItem('groceryItems', JSON.stringify(items));
+                itemInput.value = '';
+                renderList();
+            }
+        });
+        
+        // Handle Enter key
+        itemInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addBtn.click();
+            }
+        });
+        
+        // Confirm manual address
+        manualLocationBtn.addEventListener('click', () => {
+            const address = deliveryAddress.value.trim();
+            if (!address) {
+                alert('Please enter your full delivery address');
+                return;
+            }
+            
+            locationCoords.value = ''; // Clear any previous coordinates
+            confirmedCoords.style.display = 'none';
+            confirmedAddress.textContent = address;
+            locationConfirmation.style.display = 'block';
+            
+            saveCustomerData();
+        });
+        
+        // Open Google Maps to pin location
+        mapBtn.addEventListener('click', () => {
+            const address = mapAddress.value.trim();
+            if (!address) {
+                alert('Please enter your approximate address first');
+                mapAddress.focus();
+                return;
+            }
+            
+            // Create Google Maps URL with the address
+            const mapsUrl = `https://www.google.com/maps/place/${encodeURIComponent(address)}`;
+            
+            // Open in new tab with instructions
+            const newWindow = window.open(mapsUrl, '_blank');
+            
+            // Show instructions for getting coordinates
+            alert(`Instructions for pinning location:
+1. Google Maps will open in a new tab
+2. Find your exact delivery point on the map
+3. Right-click on that exact spot
+4. Select "What's here?" from the menu
+5. Copy the coordinates that appear
+6. Paste them in the field below`);
+            
+            // Prompt for coordinates
+            const coords = prompt("Please paste the coordinates you copied from Google Maps (format: latitude,longitude):");
+            
+            if (coords && validateCoordinates(coords)) {
+                locationCoords.value = coords;
+                confirmedCoords.textContent = `Coordinates: ${coords}`;
+                confirmedCoords.style.display = 'block';
+                confirmedAddress.textContent = `Address: ${address}`;
+                locationConfirmation.style.display = 'block';
+                
+                saveCustomerData();
+            } else if (coords) {
+                alert("Invalid coordinates format. Please use: latitude,longitude (e.g., 12.3456, 78.9012)");
+            }
+        });
+        
+        // Validate coordinates format
+        function validateCoordinates(coords) {
+            const pattern = /^-?\d{1,3}\.\d+,\s*-?\d{1,3}\.\d+$/;
+            return pattern.test(coords);
+        }
+        
+        // Show location confirmation
+        function showLocationConfirmation() {
+            if (locationMethod === 'manual' && deliveryAddress.value.trim()) {
+                confirmedAddress.textContent = deliveryAddress.value.trim();
+                confirmedCoords.style.display = 'none';
+                locationConfirmation.style.display = 'block';
+            } else if (locationMethod === 'map' && locationCoords.value) {
+                confirmedAddress.textContent = mapAddress.value.trim();
+                confirmedCoords.textContent = `Coordinates: ${locationCoords.value}`;
+                confirmedCoords.style.display = 'block';
+                locationConfirmation.style.display = 'block';
+            }
+        }
+        
+        // Save customer data
+        function saveCustomerData() {
+            customerData = {
+                name: customerName.value.trim(),
+                phone: customerPhone.value.trim(),
+                address: deliveryAddress.value.trim(),
+                locationMethod: locationMethod,
+                mapAddress: mapAddress.value.trim(),
+                locationCoords: locationCoords.value,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('customerData', JSON.stringify(customerData));
+        }
+        
+        // Request delivery
+        deliverBtn.addEventListener('click', () => {
+            // Validate form
+            if (!customerName.value.trim()) {
+                alert('Please enter your name');
+                customerName.focus();
+                return;
+            }
+            
+            if (!customerPhone.value.trim()) {
+                alert('Please enter your phone number');
+                customerPhone.focus();
+                return;
+            }
+            
+            if (locationMethod === 'manual' && !deliveryAddress.value.trim()) {
+                alert('Please enter your delivery address');
+                deliveryAddress.focus();
+                return;
+            }
+            
+            if (locationMethod === 'map' && !mapAddress.value.trim()) {
+                alert('Please enter your approximate address');
+                mapAddress.focus();
+                return;
+            }
+            
+            if (items.length === 0) {
+                alert('Please add items to your grocery list first.');
+                itemInput.focus();
+                return;
+            }
+            
+            // Save customer data
+            saveCustomerData();
+            
+            // Save to database (simplified for this example)
+            saveOrderToDatabase();
+            
+            // Send to WhatsApp
+            sendToWhatsApp();
+        });
+        
+        // Simulate database save
+        function saveOrderToDatabase() {
+            const order = {
+                customer: customerData,
+                items: items,
+                timestamp: new Date().toISOString()
+            };
+            
+            // In a real app, you would send this to your backend
+            console.log('Saving to database:', order);
+            localStorage.setItem('lastOrder', JSON.stringify(order));
+        }
+        
+        // Send to WhatsApp
+        function sendToWhatsApp() {
+            const phoneNumber = "7094717117"; // Replace with your number
+            
+            // Create order summary
+            let message = `*NEW GROCERY ORDER*\n\n`;
+            message += `*Customer:* ${customerData.name}\n`;
+            message += `*Phone:* ${customerData.phone}\n\n`;
+            
+            if (locationMethod === 'manual') {
+                message += `*Delivery Address (Manual):*\n${customerData.address}\n\n`;
+            } else {
+                message += `*Delivery Address (Map Pinned):*\n${customerData.mapAddress}\n`;
+                message += `*Exact Coordinates:* ${customerData.locationCoords}\n`;
+                message += `Google Maps: https://www.google.com/maps?q=${customerData.locationCoords}\n\n`;
+            }
+            
+            message += `*Order Items:*\n`;
+            message += items.map((item, index) => `${index + 1}. ${item}`).join('\n');
+            message += `\n\n*Total Items:* ${items.length}\n`;
+            message += `*Order Time:* ${new Date().toLocaleString()}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // Clear the list after order (but keep customer data)
+            items = [];
+            localStorage.setItem('groceryItems', JSON.stringify(items));
+            renderList();
+            
+            // Show confirmation
+            alert('Your order has been submitted! You will now be redirected to WhatsApp to confirm.');
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            renderList();
+            showLocationConfirmation();
+            
+            // Save customer data when fields change
+            customerName.addEventListener('change', saveCustomerData);
+            customerPhone.addEventListener('change', saveCustomerData);
+            deliveryAddress.addEventListener('change', saveCustomerData);
+            mapAddress.addEventListener('change', saveCustomerData);
+            
+            // PWA Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
