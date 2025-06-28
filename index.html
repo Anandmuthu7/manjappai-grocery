@@ -15,6 +15,16 @@
             --light-color: #F5F5DC;
             --highlight-color: #CD853F;
         }
+         .location-link {
+            color: #1a73e8;
+            text-decoration: underline;
+            cursor: pointer;
+            word-break: break-all;
+        }
+        
+        .location-link:hover {
+            color: #0d47a1;
+        }
         
         body {
             font-family: 'Playfair Display', serif;
@@ -633,6 +643,24 @@
             
             // Show confirmation
             alert('Your order has been submitted! You will now be redirected to WhatsApp to confirm.');
+        }
+       // Modify the showLocationConfirmation function to include clickable links
+        function showLocationConfirmation() {
+            if (locationMethod === 'manual' && deliveryAddress.value.trim()) {
+                const address = deliveryAddress.value.trim();
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+                confirmedAddress.innerHTML = `Address: ${address}<br>
+                    <span class="location-link" onclick="window.open('${mapsUrl}', '_blank')">View on Google Maps</span>`;
+                confirmedCoords.style.display = 'none';
+                locationConfirmation.style.display = 'block';
+            } else if (locationMethod === 'map' && locationCoords.value) {
+                const mapsUrl = `https://www.google.com/maps?q=${locationCoords.value}`;
+                confirmedAddress.innerHTML = `Approximate: ${mapAddress.value.trim()}<br>
+                    <span class="location-link" onclick="window.open('${mapsUrl}', '_blank')">View Pinned Location</span>`;
+                confirmedCoords.textContent = `Coordinates: ${locationCoords.value}`;
+                confirmedCoords.style.display = 'block';
+                locationConfirmation.style.display = 'block';
+            }
         }
         
         // Initialize the app
