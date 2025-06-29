@@ -3,422 +3,927 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grocery Delivery - Precise Location</title>
+    <title>Manjappai Grocery</title>
+    <meta name="description" content="Fast grocery delivery service">
+    <meta name="theme-color" content="#FFD700">
     <link rel="manifest" href="/manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #8B4513;
-            --secondary-color: #D2B48C;
-            --accent-color: #A0522D;
-            --text-color: #3E2723;
-            --light-color: #F5F5DC;
-            --highlight-color: #CD853F;
+            --primary-color: #FFD700;
+            --primary-dark: #FFC000;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-color: #fff;
+            --card-color: #fff;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --radius: 8px;
         }
-         .location-link {
-            color: #1a73e8;
-            text-decoration: underline;
-            cursor: pointer;
-            word-break: break-all;
+
+        [data-theme="dark"] {
+            --primary-color: #FFD700;
+            --primary-dark: #FFC000;
+            --text-color: #f5f5f5;
+            --text-light: #ccc;
+            --bg-color: #121212;
+            --card-color: #1e1e1e;
+            --border-color: #333;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        
-        .location-link:hover {
-            color: #0d47a1;
-        }
-        
-        body {
-            font-family: 'Playfair Display', serif;
-            max-width: 600px;
-            margin: 0 auto;
+
+        * {
+            margin: 0;
             padding: 0;
-            background-color: var(--light-color);
-            color: var(--text-color);
-            background-image: url('https://www.transparenttextures.com/patterns/old-map.png');
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
         }
-        
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
         header {
             background-color: var(--primary-color);
-            color: var(--light-color);
-            padding: 15px 20px;
-            text-align: center;
+            color: #333;
+            padding: 15px 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            border-bottom: 3px solid var(--accent-color);
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
-        h1 {
-            margin: 0;
-            font-family: 'Cinzel', serif;
-            font-size: 2rem;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .marquee-container {
-            background: var(--secondary-color);
-            border-top: 2px dashed var(--accent-color);
-            border-bottom: 2px dashed var(--accent-color);
-            padding: 8px 0;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .marquee {
-            white-space: nowrap;
-            animation: scroll 20s linear infinite;
-            font-style: italic;
-            color: var(--primary-color);
-        }
-        
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        .customer-info {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px;
-            margin: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid var(--secondary-color);
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input, button, textarea, select {
-            font-family: 'Playfair Display', serif;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-        
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .location-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .location-option-btn {
-            flex: 1;
-            padding: 12px;
-            background-color: var(--secondary-color);
-            border: 1px solid var(--accent-color);
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .location-option-btn.active {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .location-option-btn:hover {
-            background-color: var(--highlight-color);
-            color: white;
-        }
-        
-        .location-method {
-            display: none;
-        }
-        
-        .location-method.active {
-            display: block;
-        }
-        
-        #mapBtn {
-            background-color: var(--highlight-color);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.3s;
-        }
-        
-        #mapBtn:hover {
-            background-color: var(--primary-color);
-        }
-        
-        #manualLocationBtn {
-            background-color: var(--highlight-color);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: all 0.3s;
-        }
-        
-        #manualLocationBtn:hover {
-            background-color: var(--primary-color);
-        }
-        
-        .location-instructions {
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            margin-top: 5px;
-        }
-        
-        .location-confirmation {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: rgba(139, 195, 74, 0.2);
-            border: 1px solid #8BC34A;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .grocery-section {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px;
-            margin: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid var(--secondary-color);
-        }
-        
-        .input-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        
-        #itemInput {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px 0 0 4px;
-        }
-        
-        button {
-            padding: 10px 15px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        #addBtn {
-            background-color: var(--accent-color);
-            border-radius: 0 4px 4px 0;
-        }
-        
-        #addBtn:hover {
-            background-color: var(--primary-color);
-        }
-        
-        button.deliver {
-            background-color: var(--primary-color);
-            width: 100%;
-            margin-top: 20px;
-            font-size: 1.1rem;
-            padding: 12px;
-            border-radius: 4px;
-        }
-        
-        button.deliver:hover {
-            background-color: #5D2906;
-        }
-        
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        li {
-            padding: 12px;
-            border-bottom: 1px dashed var(--secondary-color);
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .delete-btn {
-            color: #8B0000;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 0 5px;
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
         }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .location-options {
-                flex-direction: column;
+
+        .logo i {
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-icons i {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--card-color);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transition: left 0.3s;
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .user-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: var(--radius);
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background-color: var(--primary-dark);
+            color: #333;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Main Content */
+        .main {
+            padding: 20px 0;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title h2 {
+            font-size: 1.3rem;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--card-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Location Section */
+        .location-section {
+            margin-bottom: 20px;
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .location-icon {
+            background-color: var(--primary-dark);
+            color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--card-color);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: #333;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .location-confirmation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius);
+            display: none;
+        }
+
+        .location-confirmation.active {
+            display: block;
+        }
+
+        /* Grocery List */
+        .grocery-section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .input-group button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            width: auto;
+        }
+
+        .grocery-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .grocery-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grocery-item:last-child {
+            border-bottom: none;
+        }
+
+        .delete-btn {
+            color: #f44336;
+            cursor: pointer;
+        }
+
+        /* Help Section in Sidebar */
+        .help-section {
+            padding: 15px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .help-section h3 {
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-dark);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Profile Section in Sidebar */
+        .profile-section {
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        /* Install Button */
+        .install-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 999;
+            display: none;
+        }
+
+        .install-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: relative;
+            width: 50px;
+            height: 24px;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider i {
+            position: absolute;
+            font-size: 12px;
+            top: 6px;
+        }
+
+        .slider .sun {
+            left: 6px;
+            color: #333;
+            opacity: 0;
+        }
+
+        .slider .moon {
+            right: 6px;
+            color: #333;
+        }
+
+        input:checked + .slider .sun {
+            opacity: 1;
+        }
+
+        input:checked + .slider .moon {
+            opacity: 0;
+        }
+  /* Banner Section */
+.banner-container {
+    position: relative;
+    width: 100%;
+    margin: 15px 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    height: 0;
+    padding-bottom: 25%; /* This controls the aspect ratio (4:1) */
+}
+
+.banner-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    transition: opacity 0.5s ease;
+}
+
+.banner-slide.active {
+    display: block;
+}
+
+.banner-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures images cover the area without stretching */
+    display: block;
+}
+
+/* Keep the rest of your existing banner styles */
+.banner-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+}
+
+.banner-controls button {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: var(--primary-dark);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.banner-controls button:hover {
+    background-color: white;
+}
+
+.banner-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.banner-indicators .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.banner-indicators .indicator.active {
+    background-color: white;
+}
+
+/* Responsive height adjustments */
+@media (max-width: 1200px) {
+    .banner-container {
+        padding-bottom: 30%; /* Taller on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-container {
+        padding-bottom: 40%; /* Even taller on small screens */
+    }
+    
+    .banner-controls button {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+    
+    .banner-indicators .indicator {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-container {
+        padding-bottom: 50%; /* Tallest on mobile */
+    }
+}
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Vintage Grocery Delivery</h1>
-    </header>
+    <!-- Overlay -->
+    <div class="overlay"></div>
 
-    <div class="marquee-container">
-        <div class="marquee">
-            ✦ Pin your exact location on map for most accurate delivery ✦ Free delivery on orders above ₹500 ✦
+    <!-- Install Button -->
+    <button class="install-btn" id="installBtn" title="Install App">
+        <i class="fas fa-download"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <i class="fas fa-times" id="closeSidebar"></i>
+        </div>
+        <div class="sidebar-content">
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-info">
+                    <h3 id="userName">Guest User</h3>
+                    <p id="userPhone">+91 9876543210</p>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="menu-link" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+            </ul>
+
+            <!-- Profile Section in Sidebar -->
+            <div class="profile-section">
+                <h3>My Profile</h3>
+                <div class="form-group">
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="editPhone">Phone Number</label>
+                    <input type="tel" id="editPhone" placeholder="Enter your phone number">
+                </div>
+                <button class="btn btn-block" id="saveProfileBtn">Save Changes</button>
+            </div>
+
+            <!-- Help Section in Sidebar -->
+            <div class="help-section">
+                <h3>Help & Contact</h3>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 9876543210</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>support@manjappai.com</span>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>123 Grocery Street, Chennai</span>
+                </div>
+                
+                <h3 style="margin-top: 15px;">Store Hours</h3>
+                <p>Monday - Saturday: 8:00 AM - 10:00 PM</p>
+                <p>Sunday: 9:00 AM - 9:00 PM</p>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="form-group">
+                    <label>Theme</label>
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider">
+                            <i class="fas fa-sun sun"></i>
+                            <i class="fas fa-moon moon"></i>
+                        </span>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="customer-info">
-        <h2>Your Information</h2>
-        <div class="form-group">
-            <label for="customerName">Full Name</label>
-            <input type="text" id="customerName" placeholder="John Doe" required>
-        </div>
-        <div class="form-group">
-            <label for="customerPhone">Phone Number</label>
-            <input type="tel" id="customerPhone" placeholder="9876543210" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Delivery Location Method</label>
-            <div class="location-options">
-                <div class="location-option-btn active" data-method="manual">Manual Address</div>
-                <div class="location-option-btn" data-method="map">Pin on Map</div>
-            </div>
-            
-            <!-- Manual Address Method -->
-            <div class="location-method active" id="manualMethod">
-                <label for="deliveryAddress">Full Delivery Address</label>
-                <textarea id="deliveryAddress" placeholder="House number, street, landmark, area, city, PIN code" required></textarea>
-                <div class="location-instructions">
-                    Please provide complete address details including landmarks
+    <!-- Main Content -->
+    <div id="app-content">
+        <header>
+            <div class="container header-content">
+                <div class="logo">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span>Manjappai Grocery</span>
                 </div>
-                <button id="manualLocationBtn">Confirm Address</button>
-            </div>
-            
-            <!-- Map Pin Method -->
-            <div class="location-method" id="mapMethod">
-                <label for="mapAddress">Approximate Address</label>
-                <textarea id="mapAddress" placeholder="Enter approximate address to help locate on map"></textarea>
-                <div class="location-instructions">
-                    For most accurate delivery, please pin your exact location
+                <div class="nav-icons">
+                    <i class="fas fa-bars" id="openSidebar"></i>
                 </div>
-                <button id="mapBtn">Open Google Maps to Pin Location</button>
-                <input type="hidden" id="locationCoords">
             </div>
-            
-            <div class="location-confirmation" id="locationConfirmation">
-                <strong>Location confirmed!</strong>
-                <div id="confirmedAddress"></div>
-                <div id="confirmedCoords" style="display: none;"></div>
-            </div>
-        </div>
-    </div>
+        </header>
 
-    <div class="grocery-section">
-        <h2>Your Grocery List</h2>
-        <div class="input-container">
-            <input type="text" id="itemInput" placeholder="e.g., Hide & Seek biscuit small, Head & Shoulders shampoo 5 packets">
-            <button id="addBtn">Add</button>
+        <div class="announcement-bar">
+            <div class="container">
+                <div class="marquee">
+                    ✦ Free delivery on orders above ₹500 ✦ New users get 10% off on first order ✦
+                </div>
+            </div>
         </div>
-        <ul id="groceryList"></ul>
-        <button id="deliverBtn" class="deliver">Request Delivery</button>
+        <!-- Banner Section -->
+<div class="banner-container">
+    <div class="banner-slide active">
+        <img src="banner images/banner img 1.jpg" alt="Special Offer">
+    </div>
+    <div class="banner-slide">
+        <img src="https://via.placeholder.com/1200x300/FFFFFF/333333?text=New+Arrivals+Every+Week" alt="New Arrivals">
+    </div>
+    <div class="banner-slide">
+        <img src="https://via.placeholder.com/1200x300/FFD700/333333?text=Free+Delivery+on+Orders+Above+500" alt="Free Delivery">
+    </div>
+    <div class="banner-controls">
+        <button class="banner-prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="banner-next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="banner-indicators">
+        <span class="indicator active"></span>
+        <span class="indicator"></span>
+        <span class="indicator"></span>
+    </div>
+</div>
+
+        <main class="main">
+            <div class="container">
+                <!-- Location Section -->
+                <div class="location-section">
+                    <div class="card">
+                        <div class="location-header">
+                            <div class="location-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h2>Delivery Address</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="deliveryAddress">Full Delivery Address</label>
+                            <textarea id="deliveryAddress" placeholder="House number, street, landmark, area, city, PIN code"></textarea>
+                        </div>
+                        <button class="btn btn-block" id="manualLocationBtn">Confirm Address</button>
+                        <div class="location-confirmation" id="manualLocationConfirmation">
+                            <p><strong>Address confirmed!</strong></p>
+                            <p id="confirmedAddress"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Information -->
+                <div class="customer-info">
+                    <div class="card">
+                        <h2>Your Information</h2>
+                        <div class="form-group">
+                            <label for="customerName">Full Name</label>
+                            <input type="text" id="customerName" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number</label>
+                            <input type="tel" id="customerPhone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerNotes">Delivery Notes (Optional)</label>
+                            <textarea id="customerNotes" placeholder="Any special instructions for delivery"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grocery List -->
+                <div class="grocery-section">
+                    <div class="card">
+                        <h2>Your Grocery List</h2>
+                        <div class="input-group">
+                            <input type="text" id="itemInput" placeholder="e.g., Hide & Seek biscuit small, Head & Shoulders shampoo 5 packets">
+                            <button class="btn" id="addBtn">Add</button>
+                        </div>
+                        <ul class="grocery-list" id="groceryList"></ul>
+                        <button class="btn btn-block" id="deliverBtn">
+                            <i class="fas fa-truck"></i> Request Delivery
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        // DOM elements
-        const customerName = document.getElementById('customerName');
-        const customerPhone = document.getElementById('customerPhone');
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const openSidebarBtn = document.getElementById('openSidebar');
+        const closeSidebarBtn = document.getElementById('closeSidebar');
+        const overlay = document.querySelector('.overlay');
+        const themeToggle = document.getElementById('themeToggle');
+        const installBtn = document.getElementById('installBtn');
+        
+        // Location Elements
         const deliveryAddress = document.getElementById('deliveryAddress');
-        const mapAddress = document.getElementById('mapAddress');
-        const locationOptions = document.querySelectorAll('.location-option-btn');
-        const manualMethod = document.getElementById('manualMethod');
-        const mapMethod = document.getElementById('mapMethod');
-        const mapBtn = document.getElementById('mapBtn');
         const manualLocationBtn = document.getElementById('manualLocationBtn');
-        const locationConfirmation = document.getElementById('locationConfirmation');
+        const manualLocationConfirmation = document.getElementById('manualLocationConfirmation');
         const confirmedAddress = document.getElementById('confirmedAddress');
-        const confirmedCoords = document.getElementById('confirmedCoords');
-        const locationCoords = document.getElementById('locationCoords');
+        
+        // Grocery List Elements
         const itemInput = document.getElementById('itemInput');
         const addBtn = document.getElementById('addBtn');
         const groceryList = document.getElementById('groceryList');
         const deliverBtn = document.getElementById('deliverBtn');
         
-        // Grocery items array
+        // Profile Elements
+        const editName = document.getElementById('editName');
+        const editPhone = document.getElementById('editPhone');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const userName = document.getElementById('userName');
+        const userPhone = document.getElementById('userPhone');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        // App State
         let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
         let customerData = JSON.parse(localStorage.getItem('customerData')) || {};
-        let locationMethod = 'manual'; // Default to manual address
-        
-        // Initialize form with saved data
-        if (customerData.name) customerName.value = customerData.name;
-        if (customerData.phone) customerPhone.value = customerData.phone;
-        if (customerData.address) deliveryAddress.value = customerData.address;
-        if (customerData.locationMethod) {
-            setLocationMethod(customerData.locationMethod);
-            if (customerData.locationMethod === 'map' && customerData.mapAddress) {
-                mapAddress.value = customerData.mapAddress;
+        let deferredPrompt;
+
+        // Initialize the app
+        function initApp() {
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.checked = true;
             }
-        }
-        if (customerData.locationCoords) {
-            locationCoords.value = customerData.locationCoords;
-            showLocationConfirmation();
+            
+            // Load customer data
+            if (customerData.name) {
+                document.getElementById('customerName').value = customerData.name;
+                editName.value = customerData.name;
+                userName.textContent = customerData.name;
+                userAvatar.textContent = customerData.name.charAt(0).toUpperCase();
+            }
+            if (customerData.phone) {
+                document.getElementById('customerPhone').value = customerData.phone;
+                editPhone.value = customerData.phone;
+                userPhone.textContent = customerData.phone;
+            }
+            if (customerData.address) {
+                deliveryAddress.value = customerData.address;
+                confirmedAddress.textContent = customerData.address;
+                manualLocationConfirmation.classList.add('active');
+            }
+            if (customerData.notes) {
+                document.getElementById('customerNotes').value = customerData.notes;
+            }
+            
+            // Render grocery list
+            renderList();
         }
         
-        // Set location method
-        function setLocationMethod(method) {
-            locationMethod = method;
-            
-            // Update UI
-            locationOptions.forEach(btn => {
-                if (btn.dataset.method === method) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            manualMethod.classList.toggle('active', method === 'manual');
-            mapMethod.classList.toggle('active', method === 'map');
+        // Sidebar functionality
+        function setupSidebar() {
+            openSidebarBtn.addEventListener('click', openSidebar);
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
         }
         
-        // Location option buttons
-        locationOptions.forEach(btn => {
-            btn.addEventListener('click', () => {
-                setLocationMethod(btn.dataset.method);
-                saveCustomerData();
-            });
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        }
+        
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+        
+        // Theme toggle
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Confirm manual address
+        manualLocationBtn.addEventListener('click', () => {
+            const address = deliveryAddress.value.trim();
+            if (!address) {
+                alert('Please enter your full delivery address');
+                return;
+            }
+            
+            confirmedAddress.textContent = address;
+            manualLocationConfirmation.classList.add('active');
+            
+            // Save customer data
+            customerData.address = address;
+            saveCustomerData();
         });
         
         // Render grocery list
         function renderList() {
             groceryList.innerHTML = '';
+            
             if (items.length === 0) {
                 const li = document.createElement('li');
+                li.className = 'grocery-item';
                 li.textContent = 'Your grocery list is empty. Add items above.';
-                li.style.color = 'var(--accent-color)';
+                li.style.color = 'var(--text-light)';
                 li.style.textAlign = 'center';
                 li.style.fontStyle = 'italic';
                 groceryList.appendChild(li);
@@ -427,9 +932,10 @@
             
             items.forEach((item, index) => {
                 const li = document.createElement('li');
+                li.className = 'grocery-item';
                 li.innerHTML = `
                     <span>${item}</span>
-                    <span class="delete-btn" data-index="${index}">✕</span>
+                    <span class="delete-btn" data-index="${index}"><i class="fas fa-trash"></i></span>
                 `;
                 groceryList.appendChild(li);
             });
@@ -437,7 +943,8 @@
             // Add event listeners to delete buttons
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    items.splice(e.target.dataset.index, 1);
+                    const index = e.currentTarget.dataset.index;
+                    items.splice(index, 1);
                     localStorage.setItem('groceryItems', JSON.stringify(items));
                     renderList();
                 });
@@ -462,120 +969,78 @@
             }
         });
         
-        // Confirm manual address
-        manualLocationBtn.addEventListener('click', () => {
-            const address = deliveryAddress.value.trim();
-            if (!address) {
-                alert('Please enter your full delivery address');
-                return;
-            }
-            
-            locationCoords.value = ''; // Clear any previous coordinates
-            confirmedCoords.style.display = 'none';
-            confirmedAddress.textContent = address;
-            locationConfirmation.style.display = 'block';
-            
-            saveCustomerData();
-        });
-        
-        // Open Google Maps to pin location
-        mapBtn.addEventListener('click', () => {
-            const address = mapAddress.value.trim();
-            if (!address) {
-                alert('Please enter your approximate address first');
-                mapAddress.focus();
-                return;
-            }
-            
-            // Create Google Maps URL with the address
-            const mapsUrl = `https://www.google.com/maps/place/${encodeURIComponent(address)}`;
-            
-            // Open in new tab with instructions
-            const newWindow = window.open(mapsUrl, '_blank');
-            
-            // Show instructions for getting coordinates
-            alert(`Instructions for pinning location:
-1. Google Maps will open in a new tab
-2. Find your exact delivery point on the map
-3. Right-click on that exact spot
-4. Select "What's here?" from the menu
-5. Copy the coordinates that appear
-6. Paste them in the field below`);
-            
-            // Prompt for coordinates
-            const coords = prompt("Please paste the coordinates you copied from Google Maps (format: latitude,longitude):");
-            
-            if (coords && validateCoordinates(coords)) {
-                locationCoords.value = coords;
-                confirmedCoords.textContent = `Coordinates: ${coords}`;
-                confirmedCoords.style.display = 'block';
-                confirmedAddress.textContent = `Address: ${address}`;
-                locationConfirmation.style.display = 'block';
-                
-                saveCustomerData();
-            } else if (coords) {
-                alert("Invalid coordinates format. Please use: latitude,longitude (e.g., 12.3456, 78.9012)");
-            }
-        });
-        
-        // Validate coordinates format
-        function validateCoordinates(coords) {
-            const pattern = /^-?\d{1,3}\.\d+,\s*-?\d{1,3}\.\d+$/;
-            return pattern.test(coords);
-        }
-        
-        // Show location confirmation
-        function showLocationConfirmation() {
-            if (locationMethod === 'manual' && deliveryAddress.value.trim()) {
-                confirmedAddress.textContent = deliveryAddress.value.trim();
-                confirmedCoords.style.display = 'none';
-                locationConfirmation.style.display = 'block';
-            } else if (locationMethod === 'map' && locationCoords.value) {
-                confirmedAddress.textContent = mapAddress.value.trim();
-                confirmedCoords.textContent = `Coordinates: ${locationCoords.value}`;
-                confirmedCoords.style.display = 'block';
-                locationConfirmation.style.display = 'block';
-            }
-        }
-        
         // Save customer data
         function saveCustomerData() {
             customerData = {
-                name: customerName.value.trim(),
-                phone: customerPhone.value.trim(),
+                name: document.getElementById('customerName').value.trim(),
+                phone: document.getElementById('customerPhone').value.trim(),
                 address: deliveryAddress.value.trim(),
-                locationMethod: locationMethod,
-                mapAddress: mapAddress.value.trim(),
-                locationCoords: locationCoords.value,
+                notes: document.getElementById('customerNotes').value.trim(),
                 timestamp: new Date().toISOString()
             };
+            
+            // Update user info in sidebar if name changed
+            if (customerData.name) {
+                userName.textContent = customerData.name;
+                userAvatar.textContent = customerData.name.charAt(0).toUpperCase();
+            }
+            if (customerData.phone) {
+                userPhone.textContent = customerData.phone;
+            }
+            
             localStorage.setItem('customerData', JSON.stringify(customerData));
         }
+        
+        // Save profile data
+        saveProfileBtn.addEventListener('click', () => {
+            const name = editName.value.trim();
+            const phone = editPhone.value.trim();
+            
+            if (!name || !phone) {
+                alert('Please enter both name and phone number');
+                return;
+            }
+            
+            // Update profile data
+            customerData.name = name;
+            customerData.phone = phone;
+            saveCustomerData();
+            
+            // Update UI
+            userName.textContent = name;
+            userPhone.textContent = phone;
+            userAvatar.textContent = name.charAt(0).toUpperCase();
+            document.getElementById('customerName').value = name;
+            document.getElementById('customerPhone').value = phone;
+            
+            alert('Profile updated successfully!');
+            closeSidebar();
+        });
+        
+        // Save customer data when fields change
+        document.getElementById('customerName').addEventListener('change', saveCustomerData);
+        document.getElementById('customerPhone').addEventListener('change', saveCustomerData);
+        deliveryAddress.addEventListener('change', saveCustomerData);
+        document.getElementById('customerNotes').addEventListener('change', saveCustomerData);
         
         // Request delivery
         deliverBtn.addEventListener('click', () => {
             // Validate form
-            if (!customerName.value.trim()) {
+            if (!customerData.name) {
                 alert('Please enter your name');
-                customerName.focus();
+                document.getElementById('customerName').focus();
                 return;
             }
             
-            if (!customerPhone.value.trim()) {
+            if (!customerData.phone) {
                 alert('Please enter your phone number');
-                customerPhone.focus();
+                document.getElementById('customerPhone').focus();
                 return;
             }
             
-            if (locationMethod === 'manual' && !deliveryAddress.value.trim()) {
+            if (!customerData.address) {
                 alert('Please enter your delivery address');
                 deliveryAddress.focus();
-                return;
-            }
-            
-            if (locationMethod === 'map' && !mapAddress.value.trim()) {
-                alert('Please enter your approximate address');
-                mapAddress.focus();
                 return;
             }
             
@@ -613,16 +1078,13 @@
             const phoneNumber = "7094717117"; // Replace with your number
             
             // Create order summary
-            let message = `*NEW GROCERY ORDER*\n\n`;
+            let message = `*NEW GROCERY ORDER - Manjappai Grocery*\n\n`;
             message += `*Customer:* ${customerData.name}\n`;
             message += `*Phone:* ${customerData.phone}\n\n`;
+            message += `*Delivery Address:*\n${customerData.address}\n\n`;
             
-            if (locationMethod === 'manual') {
-                message += `*Delivery Address (Manual):*\n${customerData.address}\n\n`;
-            } else {
-                message += `*Delivery Address (Map Pinned):*\n${customerData.mapAddress}\n`;
-                message += `*Exact Coordinates:* ${customerData.locationCoords}\n`;
-                message += `Google Maps: https://www.google.com/maps?q=${customerData.locationCoords}\n\n`;
+            if (customerData.notes) {
+                message += `*Delivery Notes:*\n${customerData.notes}\n\n`;
             }
             
             message += `*Order Items:*\n`;
@@ -644,45 +1106,114 @@
             // Show confirmation
             alert('Your order has been submitted! You will now be redirected to WhatsApp to confirm.');
         }
-       // Modify the showLocationConfirmation function to include clickable links
-        function showLocationConfirmation() {
-            if (locationMethod === 'manual' && deliveryAddress.value.trim()) {
-                const address = deliveryAddress.value.trim();
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-                confirmedAddress.innerHTML = `Address: ${address}<br>
-                    <span class="location-link" onclick="window.open('${mapsUrl}', '_blank')">View on Google Maps</span>`;
-                confirmedCoords.style.display = 'none';
-                locationConfirmation.style.display = 'block';
-            } else if (locationMethod === 'map' && locationCoords.value) {
-                const mapsUrl = `https://www.google.com/maps?q=${locationCoords.value}`;
-                confirmedAddress.innerHTML = `Approximate: ${mapAddress.value.trim()}<br>
-                    <span class="location-link" onclick="window.open('${mapsUrl}', '_blank')">View Pinned Location</span>`;
-                confirmedCoords.textContent = `Coordinates: ${locationCoords.value}`;
-                confirmedCoords.style.display = 'block';
-                locationConfirmation.style.display = 'block';
-            }
+        
+        // PWA Installation
+        function setupPWA() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent the mini-infobar from appearing on mobile
+                e.preventDefault();
+                // Stash the event so it can be triggered later
+                deferredPrompt = e;
+                // Show the install button
+                installBtn.style.display = 'flex';
+            });
+            
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                // Optionally, send analytics event with outcome of user choice
+                console.log(`User response to the install prompt: ${outcome}`);
+                // We've used the prompt, and can't use it again, throw it away
+                deferredPrompt = null;
+                // Hide the install button
+                installBtn.style.display = 'none';
+            });
+            
+            window.addEventListener('appinstalled', () => {
+                // Hide the install button
+                installBtn.style.display = 'none';
+                // Clear the deferredPrompt so it can be garbage collected
+                deferredPrompt = null;
+                console.log('PWA was installed');
+            });
         }
         
-        // Initialize the app
+        // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            renderList();
-            showLocationConfirmation();
-            
-            // Save customer data when fields change
-            customerName.addEventListener('change', saveCustomerData);
-            customerPhone.addEventListener('change', saveCustomerData);
-            deliveryAddress.addEventListener('change', saveCustomerData);
-            mapAddress.addEventListener('change', saveCustomerData);
-            
-            // PWA Service Worker Registration
-            if ('serviceWorker' in navigator) {
+            initApp();
+            setupSidebar();
+            setupPWA();
+        });
+        
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').then(registration => {
                     console.log('ServiceWorker registration successful');
                 }).catch(err => {
                     console.log('ServiceWorker registration failed: ', err);
                 });
-            }
-        });
+            });
+        }
+        // Banner Carousel Functionality
+let currentBannerSlide = 0;
+const bannerSlides = document.querySelectorAll('.banner-slide');
+const bannerIndicators = document.querySelectorAll('.banner-indicators .indicator');
+
+function showBannerSlide(index) {
+    bannerSlides.forEach(slide => slide.classList.remove('active'));
+    bannerIndicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    currentBannerSlide = (index + bannerSlides.length) % bannerSlides.length;
+    bannerSlides[currentBannerSlide].classList.add('active');
+    bannerIndicators[currentBannerSlide].classList.add('active');
+}
+
+function nextBannerSlide() {
+    showBannerSlide(currentBannerSlide + 1);
+}
+
+function prevBannerSlide() {
+    showBannerSlide(currentBannerSlide - 1);
+}
+
+// Auto-rotate banners
+let bannerInterval = setInterval(nextBannerSlide, 5000);
+
+// Pause on hover
+const bannerContainer = document.querySelector('.banner-container');
+bannerContainer.addEventListener('mouseenter', () => {
+    clearInterval(bannerInterval);
+});
+
+bannerContainer.addEventListener('mouseleave', () => {
+    bannerInterval = setInterval(nextBannerSlide, 5000);
+});
+
+// Manual controls
+document.querySelector('.banner-next').addEventListener('click', () => {
+    nextBannerSlide();
+    clearInterval(bannerInterval);
+    bannerInterval = setInterval(nextBannerSlide, 5000);
+});
+
+document.querySelector('.banner-prev').addEventListener('click', () => {
+    prevBannerSlide();
+    clearInterval(bannerInterval);
+    bannerInterval = setInterval(nextBannerSlide, 5000);
+});
+
+// Indicator clicks
+bannerIndicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+        showBannerSlide(index);
+        clearInterval(bannerInterval);
+        bannerInterval = setInterval(nextBannerSlide, 5000);
+    });
+});
     </script>
 </body>
 </html>
